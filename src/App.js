@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import ProductTable from './components/ProductTable';
+import ProductForm from './components/ProductForm';
+import Spinner from './components/Spinner';
 
-function App() {
+const App = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setProducts([
+        { nombre: 'Programación en JavaScript', precio: 35, categoria: 'Libros' },
+      ]);
+      setLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const handleAddProduct = (newProduct) => {
+    setProducts([...products, newProduct]);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Spinner loading={loading} />
+      {!loading && <ProductTable products={products} />}
+      <ProductForm onAddProduct={handleAddProduct} />
     </div>
   );
-}
+};
 
 export default App;
